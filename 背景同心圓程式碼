@@ -1,0 +1,18 @@
+function setup() {
+  createCanvas(600, 600);
+  noFill();
+  stroke(255,0,255);
+  
+  let X = width / 2;
+  let Y = height / 2;
+  let 半徑增加 = 10; // 每個圓圈的半徑增量
+  
+  for (let i = 0; i < 20; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse( X, Y, radius * 2, radius * 2);
+  }
+}
+function draw() {
+  // 不需要在 draw 中繪製
+}
+
