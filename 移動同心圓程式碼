@@ -1,0 +1,38 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 10; // 每個圓圈的半徑增量
+let circlenumber = 20; 
+
+function setup() {
+  createCanvas(400, 400);
+  noFill();
+  stroke(255, 0, 255);
+
+  // 初始化圓心座標和速度
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-2, 2); // X 軸速度
+  speedY = random(-2, 2); // Y 軸速度
+}
+
+function draw() {
+  background(255); // 清除上一幀的畫面
+
+  // 更新圓心位置
+  X += speedX;
+  Y += speedY;
+
+  // 檢查邊界，讓圓心反彈
+  if (X < 0 || X > width) {
+    speedX *= -1; // 反轉 X 軸
+  }
+  if (Y < 0 || Y > height) {
+    speedY *= -1; // 反轉 Y 軸
+  }
+
+  // 同心圓
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse( X, Y, radius * 2, radius * 2);
+  }
+}
