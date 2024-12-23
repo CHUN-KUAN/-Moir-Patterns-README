@@ -1,0 +1,69 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 18; // 半徑遞增
+let circlenumber = 20; 
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+let colors1 = []; // 第一組顏色陣列
+let colors2 = []; // 第二組顏色陣列
+
+function setup() {
+  createCanvas(660, 660);
+  noFill();
+  strokeWeight(8);
+  
+  // 生成第一組隨機顏色
+  for (let i = 0; i < circlenumber; i++) {
+    colors1.push(color(random(255), random(255), random(255)));
+  }
+  
+  // 生成第二組隨機顏色
+  for (let i = 0; i < circlenumber; i++) {
+    colors2.push(color(random(255), random(255), random(255)));
+  }
+
+  // 最初圓心座標和速度
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-0.2, 0.2); // X 軸速度
+  speedY = random(-0.2, 0.2); // Y 軸速度
+}
+
+function draw() {
+  background(180); 
+
+  // 圓心位置移動
+  X += speedX;
+  Y += speedY;
+
+  // 第五圈碰到邊界一定會反彈
+  let 反彈 = 半徑增加 * 5;
+  if (dist(X, Y, width / 2, height / 2) > 反彈) {
+    speedX *= -1; // 反轉 X 軸
+    speedY *= -1; // 反轉 Y 軸
+  }
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    speedX = constrain(speedX + random(-0.2, 0.2), -0.5, 0.5); 
+    speedY = constrain(speedY + random(-0.2, 0.2), -0.5, 0.5); 
+  }
+
+  // 繪製第一組同心圓
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    stroke(colors1[i]); // 使用第一組顏色
+    ellipse(X, Y, radius * 2, radius * 2);
+  }; 
+  
+  let X2 = width / 2;
+  let Y2 = height / 2;
+  
+  // 繪製第二組同心圓
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    stroke(colors2[i]); // 使用第二組顏色
+    ellipse(X2, Y2, radius * 2, radius * 2);
+  }  
+}
