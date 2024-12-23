@@ -1,0 +1,57 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 18; // 半徑遞增
+let circlenumber = 18; 
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+
+function setup() {
+  createCanvas(660, 660);
+  noFill();
+  strokeWeight(8);
+  // 最初圓心座標和速度
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-0.2, 0.2); // X 軸速度
+  speedY = random(-0.2, 0.2); // Y 軸速度
+}
+
+function draw() {
+  background(180); 
+
+  // 圓心位置移動
+  X += speedX;
+  Y += speedY;
+
+  // 第五圈碰到邊界一定會反彈
+  let 反彈 = 半徑增加 * 5;
+  if (dist(X, Y, width / 2, height / 2) > 反彈) {
+    speedX *= -1; // 反轉 X 軸
+    speedY *= -1; // 反轉 Y 軸
+  }
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    speedX = constrain(speedX + random(-0.2, 0.2), -0.5, 0.5); 
+    speedY = constrain(speedY + random(-0.2, 0.2), -0.5, 0.5); 
+  }
+
+  // 同心圓
+  stroke(0, 0, 255)
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse(X, Y, radius * 2, radius * 2);
+  }; 
+  
+  
+
+  let X2 = width / 2;
+  let Y2 = height / 2;
+  
+  stroke(0, 155, 0);
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse( X2, Y2, radius * 2, radius * 2);
+  }  
+}
