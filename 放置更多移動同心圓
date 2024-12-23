@@ -1,0 +1,90 @@
+let X1, Y1, X2, Y2, X3, Y3;
+let speedX1, speedY1, speedX2, speedY2, speedX3, speedY3;
+let 半徑增加 = 18; // 半徑遞增
+let circlenumber = 18; 
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+
+function setup() {
+  createCanvas(660, 660);
+  noFill();
+  strokeWeight(8);
+  
+  // 初始化三組移動圓心座標和速度
+  X1 = random(width);
+  Y1 = random(height);
+  speedX1 = random(-0.2, 0.2);
+  speedY1 = random(-0.2, 0.2);
+  
+  X2 = random(width);
+  Y2 = random(height);
+  speedX2 = random(-0.2, 0.2);
+  speedY2 = random(-0.2, 0.2);
+  
+  X3 = random(width);
+  Y3 = random(height);
+  speedX3 = random(-0.2, 0.2);
+  speedY3 = random(-0.2, 0.2);
+}
+
+function draw() {
+  background(0); 
+
+  // 更新第一組圓心位置
+  X1 += speedX1;
+  Y1 += speedY1;
+  checkBoundary(X1, Y1, speedX1, speedY1);
+
+  // 更新第二組圓心位置
+  X2 += speedX2;
+  Y2 += speedY2;
+  checkBoundary(X2, Y2, speedX2, speedY2);
+
+  // 更新第三組圓心位置
+  X3 += speedX3;
+  Y3 += speedY3;
+  checkBoundary(X3, Y3, speedX3, speedY3);
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    randomChangeDirection();
+  }
+
+  // 畫移動同心圓
+  drawCircles(X1, Y1, color(255,255,255));
+  drawCircles(X2, Y2, color(255,255,255));
+  drawCircles(X3, Y3, color(255,255,255));
+
+  // 畫固定同心圓
+  drawCircles(width / 2, height / 2, color(105, 105, 105));
+}
+
+// 檢查邊界並反彈
+function checkBoundary(X, Y, speedX, speedY) {
+  let 反彈 = 半徑增加 * circlenumber;
+  if (X < 半徑增加 || X > width - 半徑增加) {
+    speedX *= -1; // 反轉 X 軸
+  }
+  if (Y < 半徑增加 || Y > height - 半徑增加) {
+    speedY *= -1; // 反轉 Y 軸
+  }
+}
+
+// 隨機改變方向
+function randomChangeDirection() {
+  speedX1 = constrain(speedX1 + random(-0.2, 0.2), -0.5, 0.5); 
+  speedY1 = constrain(speedY1 + random(-0.2, 0.2), -0.5, 0.5);
+  speedX2 = constrain(speedX2 + random(-0.2, 0.2), -0.5, 0.5); 
+  speedY2 = constrain(speedY2 + random(-0.2, 0.2), -0.5, 0.5);
+  speedX3 = constrain(speedX3 + random(-0.2, 0.2), -0.5, 0.5); 
+  speedY3 = constrain(speedY3 + random(-0.2, 0.2), -0.5, 0.5);
+}
+
+function drawCircles(X, Y, circleColor) {
+  stroke(circleColor);
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse(X, Y, radius * 2, radius * 2);
+  }
+}
