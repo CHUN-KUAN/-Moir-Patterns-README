@@ -2,7 +2,7 @@ let X, Y;
 let speedX, speedY; 
 let 半徑增加 = 18; // 半徑遞增
 let movingCircles = 18; // 移動圓的圈數
-let fixedCircles = 7; // 固定圓的圈數
+let fixedCircles = 9; // 固定圓的圈數
 let changeDirectionInterval = 60; // 60幀改變方向
 let frameCount = 0; // 計算幀數
 
