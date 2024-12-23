@@ -1,0 +1,64 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 18; // 半徑遞增
+let movingCircles = 18; // 移動圓的圈數
+let fixedCircles = 7; // 固定圓的圈數
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+
+function setup() {
+  createCanvas(660, 660);
+  noFill();
+  strokeWeight(8);
+  
+  // 最初圓心座標和速度
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-0.2, 0.2); // X 軸速度
+  speedY = random(-0.2, 0.2); // Y 軸速度
+}
+
+function draw() {
+  background(180); 
+
+  // 繪製移動的同心圓
+  X += speedX;
+  Y += speedY;
+
+  // 第五圈碰到邊界一定會反彈
+  let 反彈 = 半徑增加 * movingCircles; // 調整為移動圓的圈數
+  if (dist(X, Y, width / 2, height / 2) > 反彈) {
+    speedX *= -1; // 反轉 X 軸
+    speedY *= -1; // 反轉 Y 軸
+  }
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    speedX = constrain(speedX + random(-0.2, 0.2), -0.5, 0.5); 
+    speedY = constrain(speedY + random(-0.2, 0.2), -0.5, 0.5); 
+  }
+
+  // 繪製移動的同心圓（藍色）
+  stroke(0, 0, 255); // 藍色
+  for (let i = 0; i < movingCircles; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse(X, Y, radius * 2, radius * 2);
+  }
+
+  // 繪製固定位置的同心圓（綠色）
+  stroke(0, 255, 0); // 綠色
+  let cornerOffsets = [
+    { x: 半徑增加 * fixedCircles, y: 半徑增加 * fixedCircles }, // 左上
+    { x: width - 半徑增加 * fixedCircles, y: 半徑增加 * fixedCircles }, // 右上
+    { x: 半徑增加 * fixedCircles, y: height - 半徑增加 * fixedCircles }, // 左下
+    { x: width - 半徑增加 * fixedCircles, y: height - 半徑增加 * fixedCircles } // 右下
+  ];
+
+  for (let pos of cornerOffsets) {
+    for (let i = 0; i < fixedCircles; i++) {
+      let radius = 半徑增加 * (i + 1);
+      ellipse(pos.x, pos.y, radius * 2, radius * 2); // 固定在四個角落
+    }
+  }
+}
