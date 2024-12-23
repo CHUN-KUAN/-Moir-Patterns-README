@@ -1,0 +1,86 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 18; // 半徑遞增
+let circlenumber = 18; 
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+
+// 彩虹顏色陣列
+let colors = [
+  [255, 0, 0],   // 紅
+  [255, 127, 0], // 橙
+  [255, 255, 0], // 黃
+  [0, 255, 0],   // 綠
+  [0, 0, 255],   // 藍
+  [75, 0, 130],  // 靛
+  [148, 0, 211]  // 紫
+];
+
+let currentColorIndex = 0; // 當前顏色索引
+let nextColorIndex = 1; // 下一個顏色索引
+let colorTransitionStep = 0; // 顏色過渡步驟
+
+function setup() {
+  createCanvas(660, 660);
+  noFill();
+  strokeWeight(8);
+  // 最初圓心座標和速度
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-0.2, 0.2); // X 軸速度
+  speedY = random(-0.2, 0.2); // Y 軸速度
+}
+
+function draw() {
+  background(180); 
+
+  // 繪製移動的同心圓
+  X += speedX;
+  Y += speedY;
+
+  // 第五圈碰到邊界一定會反彈
+  let 反彈 = 半徑增加 * 5;
+  if (dist(X, Y, width / 2, height / 2) > 反彈) {
+    speedX *= -1; // 反轉 X 軸
+    speedY *= -1; // 反轉 Y 軸
+  }
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    speedX = constrain(speedX + random(-0.2, 0.2), -0.5, 0.5); 
+    speedY = constrain(speedY + random(-0.2, 0.2), -0.5, 0.5); 
+  }
+
+  // 漸變顏色（移動的同心圓）
+  let r = lerp(colors[currentColorIndex][0], colors[nextColorIndex][0], colorTransitionStep);
+  let g = lerp(colors[currentColorIndex][1], colors[nextColorIndex][1], colorTransitionStep);
+  let b = lerp(colors[currentColorIndex][2], colors[nextColorIndex][2], colorTransitionStep);
+
+  // 更新顏色過渡步驟
+  colorTransitionStep += 0.01; // 控制漸變速度
+  if (colorTransitionStep >= 1) {
+    colorTransitionStep = 0; // 重置步驟
+    currentColorIndex = nextColorIndex; // 更新當前顏色索引
+    nextColorIndex = (nextColorIndex + 1) % colors.length; // 更新下一個顏色索引
+  }
+
+  // 繪製移動的同心圓
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    stroke(r, g, b); // 使用 RGB 顏色
+    ellipse(X, Y, radius * 2, radius * 2);
+  }
+
+  // 繪製固定位置但變色的同心圓
+  let fixedColorR = lerp(colors[currentColorIndex][0], colors[nextColorIndex][0], colorTransitionStep);
+  let fixedColorG = lerp(colors[currentColorIndex][1], colors[nextColorIndex][1], colorTransitionStep);
+  let fixedColorB = lerp(colors[currentColorIndex][2], colors[nextColorIndex][2], colorTransitionStep);
+
+  // 繪製固定顏色的同心圓
+  stroke(fixedColorR, fixedColorG, fixedColorB); // 使用變色的 RGB
+  for (let i = 0; i < circlenumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    ellipse(width / 2, height / 2, radius * 2, radius * 2); // 固定在畫布中心
+  }
+}
