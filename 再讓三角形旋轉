@@ -1,0 +1,76 @@
+let X, Y; 
+let speedX, speedY; 
+let 半徑增加 = 18; // 半徑遞增
+let triangleNumber = 20; 
+let changeDirectionInterval = 60; // 60幀改變方向
+let frameCount = 0; // 計算幀數
+let rotationAngle = 0; 
+let rotationSpeed = 0.01; 
+
+function setup() {
+  createCanvas(660, 660);
+  noFill(); 
+  strokeWeight(5); 
+  X = width / 2;
+  Y = height / 2;
+  speedX = random(-0.5, 0.5); // X 軸速度
+  speedY = random(-0.5, 0.5); // Y 軸速度
+}
+
+function draw() {
+  background(180);
+
+  // 藍色三角形的圓心位置
+  X += speedX;
+  Y += speedY;
+
+  // 碰到邊界反彈
+  let 最大半徑 = 半徑增加 * triangleNumber;
+  if (dist(X, Y, width / 2, height / 2) > 最大半徑) {
+    speedX *= -1;
+    speedY *= -1;
+  }
+
+  // 隨機改變方向
+  frameCount++;
+  if (frameCount % changeDirectionInterval === 0) {
+    speedX = constrain(speedX + random(-0.2, 0.2), -1, 1);
+    speedY = constrain(speedY + random(-0.2, 0.2), -1, 1);
+  }
+
+  // 更新旋轉角度
+  rotationAngle += rotationSpeed;
+
+  // 綠色三角形
+  stroke(0, 155, 0); // 綠色
+  for (let i = 0; i < triangleNumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    drawTriangle(width / 2, height / 2, radius, 0); 
+  }
+
+  //藍色同心三角形
+  stroke(0, 0, 255); // 藍色
+  for (let i = 0; i < triangleNumber; i++) {
+    let radius = 半徑增加 * (i + 1);
+    drawTriangle(X, Y, radius, rotationAngle); // 隨著 X 和 Y 移動，並旋轉
+  }
+}
+
+// 三角形的函數，加入旋轉
+function drawTriangle(cx, cy, radius, angle) {
+  // 計算三角形的三個頂點，加入旋轉角度
+  let angleOffset = -PI / 2; // 讓三角形的尖端朝上
+  let x1 = cx + cos(angleOffset + angle) * radius;
+  let y1 = cy + sin(angleOffset + angle) * radius;
+  let x2 = cx + cos(angleOffset + TWO_PI / 3 + angle) * radius;
+  let y2 = cy + sin(angleOffset + TWO_PI / 3 + angle) * radius;
+  let x3 = cx + cos(angleOffset + (2 * TWO_PI) / 3 + angle) * radius;
+  let y3 = cy + sin(angleOffset + (2 * TWO_PI) / 3 + angle) * radius;
+
+  // 空心三角形
+  beginShape();
+  vertex(x1, y1);
+  vertex(x2, y2);
+  vertex(x3, y3);
+  endShape(CLOSE);
+}
